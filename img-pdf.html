@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Optimize your images, convert PDFs to Word and Word to PDF with our free online tools.">
+    <meta name="keywords" content="image compression, PDF to Word, Word to PDF, file converter">
+    <meta name="author" content="Your Name">
+    <title>Online File Conversion & Image Compression Tool</title>
+
+    <style>
+        /* Resetting default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #3a3a3a;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 28px;
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+
+        .section .description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .upload-section,
+        .conversion-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .upload-section input,
+        .conversion-section input,
+        .compression-section select,
+        .compression-section button {
+            padding: 12px;
+            font-size: 16px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .upload-section input[type="file"] {
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        .upload-section input[type="file"]:hover {
+            background-color: #e0e0e0;
+        }
+
+        .compression-section button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .compression-section button:hover {
+            background-color: #1558a7;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-section {
+            text-align: center;
+            display: none;
+        }
+
+        .result-section a {
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .result-section button {
+            padding: 12px 30px;
+            background-color: #34b7f1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .result-section button:hover {
+            background-color: #1a73e8;
+        }
+
+        .ad-space {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .upload-section input,
+            .conversion-section input,
+            .compression-section select,
+            .compression-section button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>File Conversion & Image Compression Tool</h1>
+
+        <!-- Google AdSense Integration -->
+        <div class="ad-space">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXX" data-ad-slot="XXXXXX"
+                data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <!-- Image Compression Section -->
+        <div class="section upload-section">
+            <h2>Image Compression</h2>
+            <p class="description">Upload an image to compress and reduce its size for faster loading times.</p>
+            <input type="file" id="imageInput" accept="image/*">
+            <select id="compressionLevel">
+                <option value="0.1">Low (10%)</option>
+                <option value="0.5">Medium (50%)</option>
+                <option value="0.8">High (80%)</option>
+            </select>
+            <button onclick="compressImage()">Compress Image</button>
+        </div>
+
+        <!-- PDF to Word Conversion Section -->
+        <div class="section conversion-section">
+            <h2>PDF to Word Conversion</h2>
+            <p class="description">Convert your PDF files to editable Word documents.</p>
+            <input type="file" id="pdfInput" accept=".pdf">
+            <button onclick="convertPdfToWord()">Convert PDF to Word</button>
+        </div>
+
+        <!-- Word to PDF Conversion Section -->
+        <div class="section conversion-section">
+            <h2>Word to PDF Conversion</h2>
+            <p class="description">Convert your Word documents into PDF format.</p>
+            <input type="file" id="wordInput" accept=".doc,.docx">
+            <button onclick="convertWordToPdf()">Convert Word to PDF</button>
+        </div>
+
+        <!-- Result Section for Image -->
+        <div class="result-section" id="resultSection">
+            <h3>Optimized Image</h3>
+            <img id="compressedImage" class="image-preview" alt="Compressed Image">
+            <a href="" id="downloadLink" download="compressed_image.jpg">
+                <button>Download Compressed Image</button>
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        let imageFile = null;
+
+        // Image Compression Functionality
+        document.getElementById("imageInput").addEventListener("change", (event) => {
+            imageFile = event.target.files[0];
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById("compressedImage").src = e.target.result;
+                    document.getElementById("resultSection").style.display = "none";
+                };
+                reader.readAsDataURL(imageFile);
+            }
+        });
+
+        function compressImage() {
+            if (!imageFile) {
+                alert("Please upload an image first!");
+                return;
+            }
+
+            const compressionLevel = parseFloat(document.getElementById("compressionLevel").value);
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+                    const width = img.width * compressionLevel;
+                    const height = img.height * compressionLevel;
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    canvas.toBlob(function (blob) {
+                        const url = URL.createObjectURL(blob);
+                        document.getElementById("compressedImage").src = url;
+                        document.getElementById("downloadLink").href = url;
+                        document.getElementById("resultSection").style.display = "block";
+                    }, "image/jpeg", 0.8);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(imageFile);
+        }
+
+        // PDF to Word Conversion (Dummy Functionality)
+        function convertPdfToWord() {
+            const fileInput = document.getElementById("pdfInput");
+            if (fileInput.files.length === 0) {
+                alert("Please upload a PDF file.");
+                return;
+            }
+            // Implement PDF to Word conversion logic here (e.g., using a backend API)
+            alert("PDF to Word conversion is not yet implemented.");
+        }
+
+        // Word to PDF Conversion (Dummy Functionality)
+        function convertWordToPdf() {
+            const fileInput = document.getElementById("wordInput");
+            if (fileInput.files.length === 0) {
+                alert("Please upload a Word document.");
+                return;
+            }
+            // Implement Word to PDF conversion logic here (e.g., using a backend API)
+            alert("Word to PDF conversion is not yet implemented.");
+        }
+    </script>
+
+    <!-- Additional AdSense Ad Space -->
+    <div class="ad-space">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXX" data-ad-slot="XXXXXX"
+            data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+</body>
+
+</html>
